@@ -18,43 +18,18 @@ jobs:
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '17'  # 必须改回 17
         distribution: 'temurin'
         cache: gradle
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # =======================================================
-    # 重点是这里！新增这一步来骗过谷歌插件
-    # =======================================================
-    - name: Mock google-services.json
-      run: |
-        echo '{
-          "project_info": {
-            "project_number": "123456789012",
-            "project_id": "mock-project-id",
-            "storage_bucket": "mock-bucket"
-          },
-          "client": [
-            {
-              "client_info": {
-                "mobilesdk_app_id": "1:123456789012:android:mockappid",
-                "android_client_info": {
-                  "package_name": "com.b44t.messenger.test.beta"
-                }
-              },
-              "api_key": [
-                {
-                  "current_key": "mock-api-key"
-                }
-              ]
-            }
-          ]
-        }' > app/google-services.json
-
     - name: Build Debug APK
-      # 依然保持 JDK 17 和 -x lint
+      # 关键修改：
+      # 1. 使用 JDK 17 运行环境
+      # 2. 加上 -x lint 跳过代码检查防止报错
+      # 3. 加上 --stacktrace 以防万一出错能看到详细信息
       run: ./gradlew assembleDebug -x lint --stacktrace
 
     - name: Upload APK
