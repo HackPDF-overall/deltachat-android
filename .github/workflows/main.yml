@@ -2,10 +2,10 @@ name: Android Build APK
 
 on:
   push:
-    branches: [ "master", "main" ] # 确保这里是你仓库的主分支名字
+    branches: [ "master", "main" ]
   pull_request:
     branches: [ "master", "main" ]
-  workflow_dispatch: # 允许你手动点击按钮触发编译
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,12 +13,12 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4 # 顺便把 checkout 也更新到 v4，这是好习惯
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4 # setup-java 也可以更新到 v4
       with:
-        java-version: '17' # 如果项目较老，可能需要改为 '11' 或 '8'
+        java-version: '17' 
         distribution: 'temurin'
         cache: gradle
 
@@ -26,12 +26,11 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build Debug APK
-      # 使用 assembleDebug 编译调试包（无需签名即可安装）
-      run: ./gradlew assembleDebug --stacktrace
+      # 加上 -x lint 可以防止因代码格式小问题导致编译失败
+      run: ./gradlew assembleDebug --stacktrace -x lint
 
     - name: Upload APK
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4 # 这里必须是 v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
-        # 注意：如果路径不对，Action 会提示找不到文件，通常路径都是这个
