@@ -32,8 +32,21 @@ jobs:
       # 3. 加上 --stacktrace 以防万一出错能看到详细信息
       run: ./gradlew assembleDebug -x lint --stacktrace
 
-    - name: Upload APK
+       # 1. 侦察兵：直接用 Linux 命令全盘搜索，打印位置给你看
+    - name: 🔍 Locate APK Files (Debug info)
+      run: |
+        echo "Searching for APK files..."
+        find . -type f -name "*.apk"
+        echo "Search finished."
+
+    # 2. 收割机：根目录全图抓取
+    - name: Upload ALL APKs
       uses: actions/upload-artifact@v4
+      with:
+        name: all-detected-apks
+        path: "**/*.apk" 
+        # 如果还是找不到，就警告，别报错中断
+        if-no-files-found: warn
       with:
         name: app-debug
         path: app/build/outputs/apk/**/*.apk
