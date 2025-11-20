@@ -47,6 +47,3 @@ jobs:
         path: "**/*.apk" 
         # 如果还是找不到，就警告，别报错中断
         if-no-files-found: warn
-      with:
-        name: app-debug
-        path: app/build/outputs/apk/**/*.apk
