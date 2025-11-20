@@ -30,7 +30,7 @@ android {
         versionCode 736
         versionName "2.25.0"
 
-        applicationId "com.b44t.messenger"
+        applicationId "com.b44t.messenger.test"
         multiDexEnabled true
 
         minSdkVersion 21
